@@ -7,6 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home/home.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import { UserService } from '../user.service';
 
 @NgModule({
     declarations: [HomeComponent],
@@ -16,12 +18,13 @@ import { HomeComponent } from './home/home.component';
         FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
-        MatInputModule,
+        MatInputModule,MatTabsModule,
         MatAutocompleteModule,
         MatButtonModule,
         MatProgressSpinnerModule,
         MatIconModule,
         HomeRoutingModule
-    ]
+    ],
+     providers: [UserService],
 })
 export class HomeModule { }

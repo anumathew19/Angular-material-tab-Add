@@ -6,7 +6,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TableFiltersModule } from './table-filters/table-filters.module';
 
 @NgModule({
     declarations: [
@@ -18,8 +17,7 @@ import { TableFiltersModule } from './table-filters/table-filters.module';
         MatToolbarModule,
         MatMenuModule,
         MatButtonModule,
-        TableFiltersModule,
-        AppRoutingModule // must be last for child routing to work properly
+        AppRoutingModule 
     ],
     providers: [],
     bootstrap: [AppComponent]

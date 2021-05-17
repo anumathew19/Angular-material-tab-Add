@@ -1,48 +1,87 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { switchMap, debounceTime, tap, distinctUntilChanged } from 'rxjs/operators';
-import { WikiService } from '../wiki-service';
+import { Component, OnInit } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import {
+  FormControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { MatTabChangeEvent } from "@angular/material";
+import { UserService } from "../../user.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { User } from "src/app/user-interface";
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
+  userform: FormGroup;
+  selectedIndex: number;
+  msg: String = "";
 
-    wikiService: WikiService | null;
-    filteredResults: Observable<string[]>;
-    formGroup: FormGroup;
-    termFormControl: FormControl = new FormControl();
-    isProcessing = false;
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private fb: FormBuilder
+  ) {}
 
-    /**
-     * The constructor for the home component.
-     *
-     * @param fb a dependency injection (DI) for FormBuilder
-     * @param http a dependency injection (DI) for HttpClient
-     */
-    constructor(private fb: FormBuilder, private http: HttpClient) { }
+  ngOnInit() {
+    this.userform = this.fb.group({
+      name: ["", Validators.required],
+      username: ["", Validators.required],
+      address: [""],
+      pincode: [""],
+      phone: ["", Validators.required],
+      cardnumber: ["", Validators.required],
+      expirydate: ["", Validators.required],
+      securecode: ["", Validators.required],
+      nameoncard: ["", Validators.required],
+    });
+    this.route.params.subscribe((param) => {
+      console.log(param);
+      if (param && param.id) {
+        let user = this.userService.getUser(param.id);
+        if (user) {
+          this.userform.setValue(user);
+        } else {
+          this.router.navigate(["/home"]);
+        }
+      }
+    });
+  }
 
-    /**
-     * Called once to initialize the home component.
-     */
-    ngOnInit() {
-        this.wikiService = new WikiService(this.http);
+  add() {
+    if (this.userform.valid) {
+      this.userService.userList.push(this.userform.value);
+      this.resetForm();
+      console.log("Created data is :", this.userService.getUsers());
+      this.router.navigate(["home"]);
 
-        this.formGroup = this.fb.group({
-            termFormControl: this.termFormControl
-        });
-
-        this.filteredResults = this.formGroup.get('termFormControl').valueChanges
-            .pipe(
-                debounceTime(300),
-                distinctUntilChanged(),
-                tap(() => { this.isProcessing = true; }),
-                switchMap(term => this.wikiService.search(term)),
-                tap(() => { this.isProcessing = false; })
-            );
+    } else {
+      this.msg = "Please complete form";
     }
+  }
+
+  resetForm() {
+    console.log("reset", this.userform);
+    this.userform.reset();
+  }
+
+  moveToSelectedTab(tabName: string) {
+    for (
+      let i = 0;
+      i < document.querySelectorAll(".mat-tab-label-content").length;
+      i++
+    ) {
+      if (
+        (<HTMLElement>document.querySelectorAll(".mat-tab-label-content")[i])
+          .innerText == tabName
+      ) {
+        (<HTMLElement>document.querySelectorAll(".mat-tab-label")[i]).click();
+      }
+    }
+  }
 }

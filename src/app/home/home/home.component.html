@@ -1,18 +1,84 @@
-<form [formGroup]='formGroup'>
-  Search for a wiki page:
-  <mat-form-field appearance="outline" style="width: 400px;">
-    <input matInput placeholder="Wikipedia search" formControlName="termFormControl" [matAutocomplete]="auto">
-	  <button mat-button *ngIf="termFormControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="termFormControl.setValue('')">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
+<form [formGroup]='userform'>
+  <mat-tab-group>
+    <mat-tab label="First">
+      <p></p>
+      <div>
+        <input type="text" formControlName="name" name="name" placeholder="Name" 
+        [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+        <div *ngIf="submitted && f.name.errors" class="error">
+          <div *ngIf="f.name.errors.required">Name is required</div>
+      </div>
+      </div>&nbsp;
 
-  <mat-autocomplete #auto="matAutocomplete">
-    <div class="loading-shade" *ngIf="isProcessing">
-      <mat-spinner *ngIf="isProcessing"></mat-spinner>
-    </div>
-    <mat-option *ngFor="let result of filteredResults | async" [value]="result">{{ result }}</mat-option>
-  </mat-autocomplete>
+
+
+      <div>
+        <input type="text" formControlName="username" name="username" placeholder="Username"
+         [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+         <div *ngIf="submitted && f.username.errors" class="error">
+          <div *ngIf="f.username.errors.required">Username is required</div>
+      </div>
+      </div>&nbsp;
+      <div class="example-button-row">
+        <button mat-raised-button color="primary" (click)='moveToSelectedTab("Second")'>Next</button>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Second">
+      <p>Billing Address</p>
+      <div>
+        <input type="text" formControlName="address" name="address" placeholder="Address">
+      </div>&nbsp;
+      <div>
+        <input type="number" formControlName="pincode" name="pincode" placeholder="Pincode">
+      </div>&nbsp;
+      <div>
+        <input type="number" formControlName="phone" name="phone" placeholder="Phone"
+         [ngClass]="{ 'is-invalid': submitted && f.phone.errors }">
+         <div *ngIf="submitted && f.phone.errors" class="error">
+          <div *ngIf="f.phone.errors.required">Phone is required</div>
+      </div>
+      </div>&nbsp;
+      <div class="example-button-row">
+        <button mat-raised-button color="primary" (click)='moveToSelectedTab("Third")' >Next</button>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Third"> 
+      <p>Credit Card Details</p>
+      <div>
+        <input type="text" formControlName="cardnumber" name="cardnumber" placeholder="Card number" 
+        [ngClass]="{ 'is-invalid': submitted && f.cardnumber.errors }">
+        <div *ngIf="submitted && f.cardnumber.errors" class="error">
+          <div *ngIf="f.cardnumber.errors.required">Card number is required</div>+
+        </div>
+      </div>&nbsp;
+      <div>
+        <input type="date" formControlName="expirydate" name="expirydate" placeholder="Expiry date" 
+        [ngClass]="{ 'is-invalid': submitted && f.expirydate.errors }">
+        <div *ngIf="submitted && f.expirydate.errors" class="error">
+          <div *ngIf="f.expirydate.errors.required">Expiry date is required</div>
+        </div>
+      </div>&nbsp;
+      <div>
+        <input type="number" formControlName="securecode" name="securecode" placeholder="Secure code" 
+        [ngClass]="{ 'is-invalid': submitted && f.securecode.errors }">
+        <div *ngIf="submitted && f.securecode.errors" class="error">
+          <div *ngIf="f.securecode.errors.required">Secure code is required</div>
+        </div>
+      </div>&nbsp;
+      <div>
+        <input type="text" formControlName="nameoncard" name="nameoncard" placeholder="Name on card"
+        [ngClass]="{ 'is-invalid': submitted && f.nameoncard.errors }">
+        <div *ngIf="submitted && f.nameoncard.errors" class="error">
+          <div *ngIf="f.nameoncard.errors.required">Name on card is required</div>
+          </div>
+      </div>&nbsp;
+      <div class="example-button-row">
+        <button mat-raised-button color="primary" (click)='add()' > Submit</button>
+      </div>  
+    </mat-tab>
+  </mat-tab-group>
 </form>
 
-<p>This is an example of an autocomplete control with server-side processing. A loading spinner is displayed while it retrieves the results from the server.</p>
+<!-- [routerLink]="['/home']" -->
